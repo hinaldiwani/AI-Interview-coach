@@ -13,7 +13,7 @@ function updateNavUserUI() {
   if (token && user) {
     if (navAuth) navAuth.style.display = "none";
     if (navUser) navUser.style.display = "flex";
-    if (userNameSpan) userNameSpan.textContent = user.name;
+    if (userNameSpan) userNameSpan.textContent = user.name || "developer";
   } else {
     if (navAuth) navAuth.style.display = "flex";
     if (navUser) navUser.style.display = "none";

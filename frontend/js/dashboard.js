@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+  if (!ApiService.getAuthToken()) {
+    sessionStorage.setItem("login_notice", "Please log in to access your dashboard.");
+    sessionStorage.setItem("redirect_after_login", "dashboard.html");
+    window.location.href = "login.html";
+    return;
+  }
   loadDashboardData();
 });
 
@@ -7,7 +13,7 @@ async function loadDashboardData() {
     const data = await ApiService.getDashboard();
 
     const welcomeEl = document.getElementById("welcome-user-name");
-    if (welcomeEl) welcomeEl.textContent = data.user_name || "User";
+    if (welcomeEl) welcomeEl.textContent = data.user_name || "developer";
 
     document.getElementById("stat-total").textContent = data.total_interviews;
     document.getElementById("stat-avg").textContent = `${Math.round(data.average_score)}%`;
@@ -16,7 +22,15 @@ async function loadDashboardData() {
 
     const recentBody = document.getElementById("recent-table-body");
     if (!data.recent_interviews || data.recent_interviews.length === 0) {
-      recentBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted);">No interviews completed yet. Start your first practice session!</td></tr>`;
+      recentBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align:center; padding:2rem; color:var(--text-secondary);">
+            <div class="font-mono" style="margin-bottom:0.5rem; color:var(--text-muted);">&gt; No runs yet.</div>
+            <div style="font-size:0.9rem; margin-bottom:1rem;">Your first interview is waiting to be executed.</div>
+            <a href="interview-setup.html" class="btn btn-primary" style="padding:0.4rem 1rem; font-size:0.85rem;">Run First Interview</a>
+          </td>
+        </tr>
+      `;
       return;
     }
 
@@ -34,10 +48,10 @@ async function loadDashboardData() {
           <td>${dt}</td>
           <td><strong>${i.role}</strong></td>
           <td>${i.interview_type}</td>
-          <td><span class="badge badge-teal">${i.difficulty}</span></td>
-          <td><strong style="color:${scoreColor};">${scoreNum}%</strong></td>
+          <td><span class="badge badge-green">${i.difficulty}</span></td>
+          <td><strong class="font-mono" style="color:${scoreColor};">${scoreNum}%</strong></td>
           <td>
-            <a href="results.html?id=${i.id}" class="btn btn-secondary" style="padding:0.3rem 0.75rem; font-size:0.8rem;">View Result</a>
+            <a href="results.html?id=${i.id}" class="btn btn-secondary" style="padding:0.3rem 0.75rem; font-size:0.8rem;">View Output</a>
           </td>
         </tr>
       `;

@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
@@ -26,21 +26,27 @@
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
   flex-shrink: 0;
 }
 
 .stat-num {
   font-size: 1.5rem;
   font-weight: 700;
-  color: var(--text-primary);
+  font-family: var(--font-mono);
+  color: var(--text-main);
   line-height: 1.2;
 }
 
 .stat-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .custom-table {
@@ -56,12 +62,13 @@
 }
 
 .custom-table th {
-  background: var(--surface-secondary);
+  background: var(--surface);
   color: var(--text-secondary);
   font-size: 0.75rem;
+  font-family: var(--font-mono);
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .custom-table tr:last-child td {
@@ -69,5 +76,5 @@
 }
 
 .custom-table tbody tr:hover {
-  background-color: var(--background);
+  background-color: var(--surface);
 }

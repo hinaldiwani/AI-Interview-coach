@@ -1,4 +1,4 @@
-/* Centralized API Service for AI Interview Coach */
+/* Centralized API Service for Interview.exe */
 const API_BASE_URL = "";
 
 class ApiService {
@@ -24,16 +24,38 @@ class ApiService {
 
     try {
       const response = await fetch(API_BASE_URL + endpoint, config);
-      const data = await response.json();
+      const contentType = response.headers.get("content-type") || "";
+
+      let data;
+      if (contentType.includes("application/json")) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        data = { detail: text || "Server returned a non-JSON response." };
+      }
 
       if (!response.ok) {
-        if (response.status === 401 && !endpoint.includes("/login")) {
-          // Token expired, clear auth & redirect
+        if (response.status === 401 && !endpoint.includes("/login") && !endpoint.includes("/register")) {
+          // Token expired or unauthorized, clear auth tokens & set friendly notice
           localStorage.removeItem("token");
           localStorage.removeItem("user");
+          sessionStorage.setItem("login_notice", "Your session has expired. Please log in again.");
           window.location.href = "login.html";
+          return;
         }
-        throw new Error(data.detail || data.message || "API request failed.");
+
+        let msg = data.detail || data.message || "API request failed.";
+        if (typeof msg !== "string") {
+          msg = JSON.stringify(msg);
+        }
+
+        if (msg.includes("Authorization header missing") || msg.includes("Could not validate credentials")) {
+          msg = "Please log in to continue.";
+        } else if (!contentType.includes("application/json")) {
+          msg = "A server error occurred. Please try again later.";
+        }
+
+        throw new Error(msg);
       }
       return data;
     } catch (error) {

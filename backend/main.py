@@ -1,5 +1,6 @@
 import os
-from fastapi import FastAPI, HTTPException, Depends, status
+import traceback
+from fastapi import FastAPI, HTTPException, Depends, Request, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,6 +26,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Global Unhandled Exception Handler (Guarantees JSON error responses)
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    print(f"\n[Unhandled Backend Error] {request.method} {request.url.path}: {exc}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}"}
+    )
 
 # Startup Database Initialization
 @app.on_event("startup")

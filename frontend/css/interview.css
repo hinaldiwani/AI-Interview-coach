@@ -10,10 +10,10 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.85rem;
-  background: var(--surface);
+  background: var(--card-bg);
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
-  font-family: var(--font-main);
+  font-family: var(--font-mono);
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--primary);
@@ -23,7 +23,7 @@
 .question-card {
   padding: 1.75rem;
   margin-bottom: 1.5rem;
-  background: var(--surface);
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
 }
@@ -31,7 +31,7 @@
 .question-text {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-main);
   line-height: 1.5;
   margin-top: 0.5rem;
 }
@@ -41,9 +41,9 @@
   min-height: 180px;
   padding: 1rem;
   background: var(--surface);
-  border: 1px solid var(--border-focus);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  color: var(--text-primary);
+  color: var(--text-main);
   font-family: var(--font-main);
   font-size: 0.95rem;
   line-height: 1.6;
@@ -57,8 +57,8 @@
 
 .answer-textarea:focus {
   outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
 }
 
 .mic-btn {
@@ -68,8 +68,8 @@
   padding: 0.45rem 0.9rem;
   border-radius: var(--radius-sm);
   background: var(--surface);
-  color: var(--primary);
-  border: 1px solid var(--border-focus);
+  color: var(--accent-cyan);
+  border: 1px solid var(--border);
   cursor: pointer;
   font-weight: 500;
   font-size: 0.85rem;
@@ -77,27 +77,13 @@
 }
 
 .mic-btn:hover {
-  background: var(--primary-light);
-  border-color: var(--primary);
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
 }
 
 .mic-btn.listening {
-  background: var(--danger-light);
-  color: var(--danger-text);
-  border-color: rgba(220, 38, 38, 0.4);
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-color: rgba(239, 68, 68, 0.4);
   font-weight: 600;
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.badge-teal {
-  background-color: var(--primary-light);
-  color: var(--primary-dark);
-  border: 1px solid rgba(15, 118, 110, 0.2);
 }

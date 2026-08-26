@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/auth.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="interview-setup.html">Practice</a></li>
+        <li><a class="nav-link" href="history.html">History</a></li>
+        <li><a class="nav-link active" href="profile.html">Profile</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="card" style="max-width:520px; margin:2.5rem auto; padding:2rem;">
+      <div class="auth-header">
+        <h2>Candidate Profile</h2>
+        <p>Account credentials and registration details.</p>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="prof-name" class="form-control" readonly>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="prof-email" class="form-control" readonly>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Account Creation Date</label>
+        <input type="text" id="prof-created" class="form-control" readonly>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; margin-top:2rem;">
+        <a href="dashboard.html" class="btn btn-secondary">Go to Dashboard</a>
+        <button class="btn btn-primary" onclick="handleLogout()">Logout Session</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        const profileData = await ApiService.getProfile();
+        const u = profileData.user;
+        document.getElementById("prof-name").value = u.name;
+        document.getElementById("prof-email").value = u.email;
+        document.getElementById("prof-created").value = new Date(u.created_at).toLocaleString();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
+</body>
+</html>

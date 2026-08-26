@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/auth.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="register.html">Register</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="auth-container">
+      <div class="auth-header">
+        <h2>Welcome back</h2>
+        <p>Log in to access your interview dashboard.</p>
+      </div>
+
+      <form onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="email" class="form-control" placeholder="candidate@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+        </div>
+
+        <div id="error-msg" class="error-message"></div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%;">Log In to Dashboard →</button>
+      </form>
+
+      <p style="text-align:center; margin-top:1.5rem; color:var(--text-secondary); font-size:0.875rem;">
+        Don't have an account yet? <a href="register.html" style="color:var(--primary); text-decoration:none; font-weight:600;">Register Free</a>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+.score-gauge-card {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--surface) 79%, transparent 80% 100%),
+              conic-gradient(var(--accent) calc(var(--score-pct, 0) * 1%), var(--border) 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.breakdown-item {
+  margin-bottom: 1rem;
+}
+
+.breakdown-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.progress-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--accent);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.review-card {
+  margin-bottom: 1rem;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.review-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: var(--surface);
+  transition: background-color 0.15s ease;
+}
+
+.review-header:hover {
+  background: var(--surface-secondary);
+}
+
+.review-body {
+  padding: 1.25rem;
+  border-top: 1px solid var(--border);
+  background: var(--surface-secondary);
+}
+
+.review-body.collapsed {
+  display: none;
+}
+
+.eval-box {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+}
+
+.eval-box-well {
+  background: var(--success-light);
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  border-left: 4px solid var(--success);
+  color: var(--success-text);
+}
+
+.eval-box-improve {
+  background: var(--warning-light);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  border-left: 4px solid var(--warning);
+  color: var(--warning-text);
+}
+
+.eval-box-ideal {
+  background: var(--primary-light);
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  border-left: 4px solid var(--primary);
+  color: var(--primary-dark);
+}

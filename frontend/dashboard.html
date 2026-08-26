@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/dashboard.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link active" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="interview-setup.html">Practice</a></li>
+        <li><a class="nav-link" href="history.html">History</a></li>
+        <li><a class="nav-link" href="profile.html">Profile</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <!-- Header Greeting Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <h1 style="font-size:1.75rem; font-weight:700;">Welcome back, <span id="welcome-user-name">Candidate</span></h1>
+        <p style="color:var(--text-secondary); margin-top:0.25rem;">Track your practice sessions, score progress, and session reviews.</p>
+      </div>
+      <a href="interview-setup.html" class="btn btn-primary btn-lg">+ Start New Interview</a>
+    </div>
+
+    <!-- Stat Metrics Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="icon">📊</div>
+        <div>
+          <div id="stat-total" class="stat-num">0</div>
+          <div class="stat-label">Interviews Completed</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">📈</div>
+        <div>
+          <div id="stat-avg" class="stat-num">0%</div>
+          <div class="stat-label">Average Score</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🏆</div>
+        <div>
+          <div id="stat-best" class="stat-num">0%</div>
+          <div class="stat-label">Best Score</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="icon">🎯</div>
+        <div>
+          <div id="stat-latest" class="stat-num">0%</div>
+          <div class="stat-label">Latest Score</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Sessions Table Card -->
+    <div class="card" style="padding:1.5rem; margin-bottom:2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:0.85rem;">
+        <div>
+          <h2 style="font-size:1.15rem; font-weight:700;">Recent Interview Sessions</h2>
+          <p style="font-size:0.85rem; color:var(--text-secondary);">Your latest mock practice performance records.</p>
+        </div>
+        <a href="history.html" class="btn btn-secondary" style="font-size:0.825rem;">View Full History →</a>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Target Role</th>
+              <th>Type</th>
+              <th>Difficulty</th>
+              <th>Score</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recent-table-body">
+            <!-- Dynamically populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

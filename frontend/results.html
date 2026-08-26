@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluation Results – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/results.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="interview-setup.html">Practice</a></li>
+        <li><a class="nav-link" href="history.html">History</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="section-header" style="text-align:center; margin-bottom:2rem;">
+      <h1 style="font-size:1.75rem; font-weight:700;">Interview Report</h1>
+      <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">Comprehensive evaluation scores, feedback, and study recommendations.</p>
+    </div>
+
+    <!-- Overall Gauge & Breakdown Grid -->
+    <div style="display:grid; grid-template-columns: 260px 1fr; gap:1.75rem; margin-bottom:2rem;">
+      <div class="score-gauge-card">
+        <div id="overall-circle" class="score-circle" style="--score-pct: 0;">
+          <span id="overall-score-num">0</span>
+        </div>
+        <h3 id="category-tag" style="font-size:1.15rem; font-weight:700; color:var(--text-primary);">Evaluating</h3>
+        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem;">Overall Score out of 100</p>
+      </div>
+
+      <div class="card" style="padding:1.5rem;">
+        <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:1.25rem; color:var(--text-primary); border-bottom:1px solid var(--border); padding-bottom:0.6rem;">Performance Breakdown</h3>
+
+        <div class="breakdown-item">
+          <div class="breakdown-label"><span>Technical Knowledge</span><span id="val-tech">0 / 100</span></div>
+          <div class="progress-track"><div id="bar-tech" class="progress-fill" style="width:0%; background:var(--accent);"></div></div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-label"><span>Correctness</span><span id="val-correct">0 / 100</span></div>
+          <div class="progress-track"><div id="bar-correct" class="progress-fill" style="width:0%; background:var(--primary);"></div></div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-label"><span>Communication</span><span id="val-comm">0 / 100</span></div>
+          <div class="progress-track"><div id="bar-comm" class="progress-fill" style="width:0%; background:var(--success);"></div></div>
+        </div>
+
+        <div class="breakdown-item">
+          <div class="breakdown-label"><span>Completeness</span><span id="val-comp">0 / 100</span></div>
+          <div class="progress-track"><div id="bar-comp" class="progress-fill" style="width:0%; background:var(--warning);"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback & Recommendations -->
+    <div class="card" style="padding:1.5rem; margin-bottom:2rem;">
+      <h2 style="font-size:1.15rem; font-weight:700; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:0.6rem;">Personal Recommendations</h2>
+      
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1.5rem; margin-bottom:1.25rem;">
+        <div style="background:var(--success-light); padding:1.1rem; border-radius:var(--radius-sm); border:1px solid rgba(22,163,74,0.2);">
+          <strong style="color:var(--success-text); font-size:0.875rem;">Key Strengths</strong>
+          <p id="text-strengths" style="color:var(--text-secondary); font-size:0.875rem; margin-top:0.35rem;">Loading...</p>
+        </div>
+
+        <div style="background:var(--warning-light); padding:1.1rem; border-radius:var(--radius-sm); border:1px solid rgba(217,119,6,0.2);">
+          <strong style="color:var(--warning-text); font-size:0.875rem;">Areas to Improve</strong>
+          <p id="text-weakness" style="color:var(--text-secondary); font-size:0.875rem; margin-top:0.35rem;">Loading...</p>
+        </div>
+      </div>
+
+      <div style="background:var(--primary-light); padding:1.1rem; border-radius:var(--radius-sm); border:1px solid rgba(15,118,110,0.2);">
+        <strong style="color:var(--primary-dark); font-size:0.875rem;">Suggested Practice Topics</strong>
+        <p id="text-recommendations" style="color:var(--text-secondary); font-size:0.875rem; margin-top:0.35rem;">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Question Reviews Accordion -->
+    <div style="margin-bottom:2rem;">
+      <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:1rem;">Question-by-Question Review</h2>
+      <div id="reviews-container">
+        <!-- Dynamically populated by JS -->
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="display:flex; justify-content:center; gap:1rem; margin-top:2rem;">
+      <a href="interview-setup.html" class="btn btn-primary btn-lg">Start Another Interview</a>
+      <a href="dashboard.html" class="btn btn-secondary btn-lg">Return to Dashboard</a>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/results.js"></script>
+</body>
+</html>

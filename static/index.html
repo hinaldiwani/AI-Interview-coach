@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Coach – Professional Mock Interview Preparation</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link active" href="index.html">Home</a></li>
+        <li><a class="nav-link" href="interview-setup.html">Practice</a></li>
+        <li><a class="nav-link" href="#how-it-works">How It Works</a></li>
+        <li><a class="nav-link" href="#features">Features</a></li>
+      </ul>
+      <div id="nav-auth-links" style="display:flex; gap:0.75rem;">
+        <a href="login.html" class="btn btn-secondary">Log In</a>
+        <a href="register.html" class="btn btn-primary">Start Free</a>
+      </div>
+      <div id="nav-user-profile" style="display:none; align-items:center; gap:0.75rem;">
+        <span id="nav-user-name" style="font-weight:600; font-size:0.875rem; color:var(--text-primary);">Candidate</span>
+        <a href="dashboard.html" class="btn btn-secondary">Dashboard</a>
+        <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <!-- Hero Section -->
+    <section style="display:grid; grid-template-columns: 1fr 1fr; gap:3.5rem; align-items:center; padding:3.5rem 0;">
+      <div>
+        <span class="badge badge-teal" style="margin-bottom:1rem; text-transform:uppercase; letter-spacing:0.05em; font-size:0.75rem;">INTERVIEW PREPARATION</span>
+        <h1 style="font-size:2.75rem; font-weight:800; margin-bottom:1rem; color:var(--text-primary); letter-spacing:-0.03em;">Practice interviews.<br>Build confidence.</h1>
+        <p style="font-size:1.05rem; color:var(--text-secondary); margin-bottom:2rem; line-height:1.6;">Conduct realistic role-specific mock interviews, receive objective AI evaluations, and track your readiness with personalized feedback.</p>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+          <a href="interview-setup.html" class="btn btn-primary btn-lg">Start Practice →</a>
+          <a href="#how-it-works" class="btn btn-secondary btn-lg">View How It Works</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="padding:1.75rem; border:1px solid var(--border); box-shadow:var(--shadow-md);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.75rem;">
+            <div>
+              <span class="badge badge-teal">Python Developer</span>
+              <span style="font-size:0.8rem; color:var(--text-muted); margin-left:0.5rem;">Technical Interview</span>
+            </div>
+            <span class="badge badge-success" style="font-size:0.85rem;">Score: 85 / 100</span>
+          </div>
+
+          <div style="margin-bottom:1rem;">
+            <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Question</span>
+            <p style="font-weight:600; color:var(--text-primary); margin-top:0.25rem; font-size:0.95rem;">"What is the difference between a list and a tuple in Python?"</p>
+          </div>
+
+          <div style="margin-bottom:1rem; background:var(--background); padding:0.85rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+            <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Candidate Response</span>
+            <p style="font-size:0.875rem; color:var(--text-secondary); margin-top:0.25rem;">"Lists are mutable sequences defined using square brackets [], while tuples are immutable sequences defined using parentheses (). Tuples consume less memory and execute faster..."</p>
+          </div>
+
+          <div style="background:var(--success-light); border:1px solid rgba(22,163,74,0.2); padding:0.85rem; border-radius:var(--radius-sm);">
+            <strong style="color:var(--success-text); font-size:0.825rem;">Evaluation Feedback:</strong>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;">Strong, concise explanation of mutability, memory efficiency, and structural syntax differences.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" style="padding:4rem 0; border-top:1px solid var(--border);">
+      <div style="margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem; font-weight:700;">How It Works</h2>
+        <p style="color:var(--text-secondary); margin-top:0.35rem;">A simple 3-step process to elevate your technical interview performance.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+        <div class="card" style="padding:1.5rem;">
+          <div style="font-size:1.5rem; font-weight:800; color:var(--primary); margin-bottom:0.75rem;">01</div>
+          <h3 style="font-size:1.1rem; margin-bottom:0.4rem;">Practice</h3>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Select your target job role, experience level, and difficulty. Practice tailored questions using text or voice input.</p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <div style="font-size:1.5rem; font-weight:800; color:var(--primary); margin-bottom:0.75rem;">02</div>
+          <h3 style="font-size:1.1rem; margin-bottom:0.4rem;">Get Feedback</h3>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Receive instant objective evaluation scores covering technical accuracy, relevance, and completeness with ideal reference answers.</p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <div style="font-size:1.5rem; font-weight:800; color:var(--primary); margin-bottom:0.75rem;">03</div>
+          <h3 style="font-size:1.1rem; margin-bottom:0.4rem;">Track Progress</h3>
+          <p style="font-size:0.9rem; color:var(--text-secondary);">Monitor score trends, view detailed interview histories, and focus on recommended topic areas to build readiness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" style="padding:3rem 0 4rem; border-top:1px solid var(--border);">
+      <div style="margin-bottom:2.5rem;">
+        <h2 style="font-size:1.75rem; font-weight:700;">Designed for Technical Excellence</h2>
+        <p style="color:var(--text-secondary); margin-top:0.35rem;">Everything you need to practice, evaluate, and refine your responses.</p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;">
+        <div class="card" style="padding:1.5rem;">
+          <h3 style="font-size:1.05rem; margin-bottom:0.5rem; color:var(--text-primary);">Role-Specific Questions</h3>
+          <p style="font-size:0.875rem; color:var(--text-secondary);">Covers Python Developer, Java Developer, Web Developer, Full Stack, Data Analyst, Data Scientist, and Software Developer roles.</p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <h3 style="font-size:1.05rem; margin-bottom:0.5rem; color:var(--text-primary);">Voice Speech-to-Text</h3>
+          <p style="font-size:0.875rem; color:var(--text-secondary);">Answer naturally using built-in browser speech recognition or type your responses directly.</p>
+        </div>
+
+        <div class="card" style="padding:1.5rem;">
+          <h3 style="font-size:1.05rem; margin-bottom:0.5rem; color:var(--text-primary);">MySQL Performance History</h3>
+          <p style="font-size:0.875rem; color:var(--text-secondary);">All past sessions, answer logs, and evaluation metrics are persistently stored for analytics and review.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

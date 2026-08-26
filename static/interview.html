@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Interview Room – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/interview.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <div class="timer-box">
+        ⏱️ <span id="timer-display">00:00</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper" style="max-width:860px;">
+    <div class="interview-header">
+      <div>
+        <span id="q-number-tag" class="badge badge-teal">Question 1 of 5</span>
+        <span id="q-type-tag" class="badge badge-teal" style="margin-left:0.4rem;">Technical</span>
+      </div>
+      <span style="font-size:0.8rem; color:var(--text-muted);">Focused Interview Mode</span>
+    </div>
+
+    <div class="question-card">
+      <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Question</span>
+      <h2 id="q-text" class="question-text">Loading question...</h2>
+    </div>
+
+    <div style="margin-bottom:1.5rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+        <label style="font-weight:600; font-size:0.875rem; color:var(--text-primary);">Your Answer</label>
+        <button type="button" id="mic-btn" class="mic-btn" onclick="toggleVoiceInput()">
+          🎙️ Start Voice Answer
+        </button>
+      </div>
+      
+      <textarea id="answer-input" class="answer-textarea" placeholder="Type your detailed response here..."></textarea>
+      
+      <div style="display:flex; justify-content:flex-end; margin-top:0.4rem;">
+        <span style="font-size:0.8rem; color:var(--text-muted);">Tip: Clear, structured answers score higher.</span>
+      </div>
+    </div>
+
+    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:1.25rem;">
+      <button id="btn-prev" class="btn btn-secondary" onclick="navigateQuestion(-1)">← Previous</button>
+      <div style="display:flex; gap:0.75rem;">
+        <button class="btn btn-secondary" onclick="skipQuestion()">Skip Question</button>
+        <button id="btn-submit" class="btn btn-primary" onclick="submitAnswer()">Submit Answer ➔</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/interview.js"></script>
+</body>
+</html>

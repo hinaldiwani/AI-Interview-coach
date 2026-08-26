@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview History – AI Interview Coach</title>
+  <link rel="stylesheet" href="css/style.css?v=2.0">
+  <link rel="stylesheet" href="css/dashboard.css?v=2.0">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <div class="logo-icon">AI</div>
+        <span>AI Interview Coach</span>
+      </a>
+      <ul class="nav-links">
+        <li><a class="nav-link" href="dashboard.html">Dashboard</a></li>
+        <li><a class="nav-link" href="interview-setup.html">Practice</a></li>
+        <li><a class="nav-link active" href="history.html">History</a></li>
+        <li><a class="nav-link" href="profile.html">Profile</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn btn-secondary" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="section-header" style="margin-bottom:1.5rem;">
+      <h1 style="font-size:1.75rem; font-weight:700;">Interview History</h1>
+      <p style="color:var(--text-secondary); font-size:0.9rem; margin-top:0.25rem;">Complete record of your past mock interview sessions.</p>
+    </div>
+
+    <div class="card" style="padding:1.5rem;">
+      <div style="overflow-x:auto;">
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Date & Time</th>
+              <th>Role</th>
+              <th>Type</th>
+              <th>Difficulty</th>
+              <th>Score</th>
+              <th>Category</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="history-table-body">
+            <!-- Dynamically populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 AI Interview Coach. All rights reserved.</p>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/history.js"></script>
+</body>
+</html>

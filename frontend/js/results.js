@@ -37,6 +37,11 @@ async function loadResults(id) {
     }
     catTag.textContent = category;
 
+    const typeBadge = document.getElementById("type-badge");
+    if (typeBadge) {
+      typeBadge.textContent = `TYPE: ${(interview.interview_type || "Technical").toUpperCase()}`;
+    }
+
     // Sub-scores
     updateScoreBar("bar-tech", "val-tech", result.technical_score);
     updateScoreBar("bar-correct", "val-correct", result.correctness_score);
@@ -102,4 +107,8 @@ function updateScoreBar(barId, valId, val) {
 function toggleAccordion(headerEl) {
   const body = headerEl.nextElementSibling;
   body.classList.toggle("collapsed");
+}
+
+function handleLogout() {
+  ApiService.logout();
 }

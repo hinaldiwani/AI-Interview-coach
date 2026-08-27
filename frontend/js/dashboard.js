@@ -61,3 +61,7 @@ async function loadDashboardData() {
     console.error("Failed to load dashboard statistics:", err);
   }
 }
+
+function handleLogout() {
+  ApiService.logout();
+}

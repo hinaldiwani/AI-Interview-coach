@@ -18,12 +18,10 @@ app = FastAPI(
     version="2.0.0"
 )
 
-# Enable CORS
+# Enable CORS for local origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5500",
-        "http://127.0.0.1:5500",
         "http://localhost:8000",
         "http://127.0.0.1:8000"
     ],
@@ -110,13 +108,14 @@ app.include_router(interview_router)
 app.include_router(dashboard_router)
 app.include_router(history_router)
 
-# Mount Frontend Static Files
+# Serve Frontend HTML, CSS, and JS Files directly from frontend/
 frontend_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "frontend")
-if os.path.exists(frontend_dir):
-    app.mount("/static", StaticFiles(directory=frontend_dir), name="frontend_static")
 
 @app.get("/{full_path:path}")
 def serve_frontend_pages(full_path: str):
+    if full_path.startswith("api/"):
+        return JSONResponse(status_code=404, content={"detail": "API endpoint not found."})
+
     file_path = os.path.join(frontend_dir, full_path)
     if full_path and os.path.isfile(file_path):
         res = FileResponse(file_path)

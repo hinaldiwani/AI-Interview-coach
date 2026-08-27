@@ -1,10 +1,11 @@
 let activeSession = null;
 let currentIndex = 0;
 let userAnswers = {};
-let timeElapsed = 0;
+let remainingSeconds = 0;
 let timerInterval = null;
 let speechRecognizer = null;
 let isListening = false;
+let isSubmitting = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   const dataStr = sessionStorage.getItem("active_interview");
@@ -14,9 +15,95 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   activeSession = JSON.parse(dataStr);
   initSpeech();
-  startTimer();
+  initCountdownTimer();
   renderQuestion();
 });
+
+function initCountdownTimer() {
+  const interviewId = activeSession.interview_id;
+  const durationSec = activeSession.duration_seconds || activeSession.total_duration_seconds || (activeSession.questions ? activeSession.questions.length * 180 : 1800);
+
+  const startKey = `interview_start_timestamp_${interviewId}`;
+  let startTime = sessionStorage.getItem(startKey);
+
+  if (!startTime || isNaN(parseInt(startTime, 10))) {
+    if (activeSession.start_timestamp && !isNaN(parseInt(activeSession.start_timestamp, 10))) {
+      startTime = parseInt(activeSession.start_timestamp, 10);
+    } else {
+      startTime = Date.now();
+    }
+    sessionStorage.setItem(startKey, startTime);
+  } else {
+    startTime = parseInt(startTime, 10);
+  }
+
+  const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+  remainingSeconds = Math.max(0, durationSec - elapsedSeconds);
+
+  updateTimerDisplay();
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    remainingSeconds--;
+    if (remainingSeconds <= 0) {
+      remainingSeconds = 0;
+      updateTimerDisplay();
+      clearInterval(timerInterval);
+      handleTimeUp();
+    } else {
+      updateTimerDisplay();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  if (isNaN(remainingSeconds) || remainingSeconds < 0) {
+    remainingSeconds = 0;
+  }
+
+  const mins = Math.floor(remainingSeconds / 60);
+  const secs = remainingSeconds % 60;
+  const displayStr = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  
+  const clockEl = document.getElementById("countdown-clock");
+  if (clockEl) {
+    clockEl.textContent = displayStr;
+    clockEl.classList.remove("clock-warning", "clock-danger");
+    if (remainingSeconds <= 60) {
+      clockEl.classList.add("clock-danger");
+    } else if (remainingSeconds <= 300) {
+      clockEl.classList.add("clock-warning");
+    }
+  }
+}
+
+async function handleTimeUp() {
+  if (isSubmitting) return;
+  isSubmitting = true;
+
+  const banner = document.getElementById("timeout-banner");
+  if (banner) banner.style.display = "block";
+
+  // Save current response
+  const q = activeSession.questions[currentIndex];
+  if (q) {
+    const inputEl = document.getElementById("answer-input");
+    if (inputEl) userAnswers[q.id] = inputEl.value.trim();
+  }
+
+  // Submit current answer if present
+  try {
+    if (q && userAnswers[q.id]) {
+      await ApiService.submitAnswer(activeSession.interview_id, q.id, userAnswers[q.id]);
+    }
+  } catch (e) {
+    console.error("Auto submit answer error:", e);
+  }
+
+  setTimeout(async () => {
+    await finalizeInterview();
+  }, 1200);
+}
 
 function renderQuestion() {
   const q = activeSession.questions[currentIndex];
@@ -24,7 +111,7 @@ function renderQuestion() {
   const num = currentIndex + 1;
 
   document.getElementById("q-number-tag").textContent = `Question ${num} of ${total}`;
-  document.getElementById("q-type-tag").textContent = q.question_type || "Technical";
+  document.getElementById("q-type-tag").textContent = (q.question_type || activeSession.interview_type || "Technical").toUpperCase();
   document.getElementById("q-text").textContent = q.question_text;
 
   const inputEl = document.getElementById("answer-input");
@@ -61,6 +148,8 @@ function skipQuestion() {
 }
 
 async function submitAnswer() {
+  if (isSubmitting) return;
+
   const q = activeSession.questions[currentIndex];
   const text = document.getElementById("answer-input").value.trim();
   userAnswers[q.id] = text;
@@ -76,32 +165,31 @@ async function submitAnswer() {
       currentIndex++;
       renderQuestion();
     } else {
+      isSubmitting = true;
       await finalizeInterview();
     }
   } catch (err) {
-    alert(`Error: ${err.message}`);
+    console.error("Submit answer error:", err);
+    alert(err.message || "Unable to submit answer. Please try again.");
   } finally {
-    btn.disabled = false;
+    if (!isSubmitting) {
+      btn.disabled = false;
+    }
   }
 }
 
 async function finalizeInterview() {
-  clearInterval(timerInterval);
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
   try {
-    const res = await ApiService.completeInterview(activeSession.interview_id);
+    await ApiService.completeInterview(activeSession.interview_id);
     window.location.href = `results.html?id=${activeSession.interview_id}`;
   } catch (err) {
-    alert(`Finalization Error: ${err.message}`);
+    console.error("Finalization error:", err);
+    window.location.href = `results.html?id=${activeSession.interview_id}`;
   }
-}
-
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeElapsed++;
-    const mins = Math.floor(timeElapsed / 60);
-    const secs = timeElapsed % 60;
-    document.getElementById("timer-display").textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-  }, 1000);
 }
 
 function initSpeech() {
@@ -139,4 +227,8 @@ function toggleVoiceInput() {
     btn.classList.add("listening");
     btn.textContent = "🎙️ Listening... (Click to Stop)";
   }
+}
+
+function handleLogout() {
+  ApiService.logout();
 }

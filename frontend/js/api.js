@@ -1,5 +1,5 @@
-/* Centralized API Service for Interview.exe */
-const API_BASE_URL = "http://127.0.0.1:8000";
+/* Centralized API Service for HirePilot */
+const API_BASE_URL = window.location.origin;
 
 class ApiService {
   static getAuthToken() {
@@ -98,6 +98,10 @@ class ApiService {
       method: "POST",
       body: JSON.stringify({ role, experience, interview_type, difficulty, total_questions })
     });
+  }
+
+  static async getInterview(id) {
+    return this.request(`/api/interviews/${id}`);
   }
 
   static async submitAnswer(interviewId, questionId, userAnswer) {

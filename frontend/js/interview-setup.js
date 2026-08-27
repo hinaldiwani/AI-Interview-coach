@@ -120,4 +120,53 @@ function selectOptionCard(cardEl, groupName) {
   cardEl.classList.add("selected");
   const radio = cardEl.querySelector("input[type='radio']");
   if (radio) radio.checked = true;
+  updateEstimatedDuration();
+}
+
+const DURATION_MATRIX = {
+  "Technical": { "Easy": 120, "Medium": 180, "Hard": 240 },
+  "HR": { "Easy": 90, "Medium": 120, "Hard": 180 },
+  "Behavioral": { "Easy": 180, "Medium": 240, "Hard": 300 },
+  "Mixed": { "Easy": 150, "Medium": 180, "Hard": 240 }
+};
+
+function updateEstimatedDuration() {
+  const typeEl = document.querySelector("input[name='type']:checked");
+  const typeVal = typeEl ? typeEl.value : "Technical";
+  const diffEl = document.getElementById("difficulty");
+  const diffVal = diffEl ? diffEl.value : "Medium";
+  const countEl = document.getElementById("questions_count");
+  const countVal = countEl ? parseInt(countEl.value, 10) : 10;
+
+  const t = DURATION_MATRIX[typeVal] || DURATION_MATRIX["Technical"];
+  const secPerQ = t[diffVal] || 180;
+  const totalSec = countVal * secPerQ;
+
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+
+  let label = "";
+  if (secs > 0) {
+    label = `${mins} minutes ${secs} seconds`;
+  } else {
+    label = `${mins} minutes`;
+  }
+
+  const tag = document.getElementById("est-duration-tag");
+  if (tag) tag.textContent = label;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  restoreSavedConfig();
+  updateEstimatedDuration();
+
+  const diffEl = document.getElementById("difficulty");
+  if (diffEl) diffEl.addEventListener("change", updateEstimatedDuration);
+
+  const countEl = document.getElementById("questions_count");
+  if (countEl) countEl.addEventListener("change", updateEstimatedDuration);
+});
+
+function handleLogout() {
+  ApiService.logout();
 }

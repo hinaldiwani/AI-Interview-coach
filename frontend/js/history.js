@@ -67,3 +67,7 @@ async function loadHistory() {
     console.error("Failed to load execution history:", err);
   }
 }
+
+function handleLogout() {
+  ApiService.logout();
+}

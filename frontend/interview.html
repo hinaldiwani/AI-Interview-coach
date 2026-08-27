@@ -3,31 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interview.exe — Live Execution</title>
-  <link rel="stylesheet" href="css/style.css?v=3.0">
-  <link rel="stylesheet" href="css/interview.css?v=3.0">
+  <title>HirePilot — Live Interview</title>
+  <link rel="stylesheet" href="css/interview.css?v=3">
 </head>
 <body>
 
   <header class="navbar">
     <div class="nav-container">
-      <a href="index.html" class="brand-logo">
-        <div class="logo-icon">&gt;_</div>
-        <span>Interview<span class="brand-exe">.exe</span></span>
-      </a>
-      <div class="timer-box font-mono">
-        ⏱️ TIME: <span id="timer-display">00:00</span>
-      </div>
+      <a href="index.html" class="brand-logo">Hire<span class="brand-accent">Pilot</span></a>
     </div>
   </header>
 
   <main class="main-wrapper" style="max-width:860px;">
+    <div id="timeout-banner" style="display:none; margin-bottom:1rem; padding:0.85rem; background:rgba(245, 158, 11, 0.12); border:1px solid var(--warning); color:var(--warning); border-radius:var(--radius-sm); font-weight:600; text-align:center;">
+      ⏰ Time's up! Your interview has been submitted.
+    </div>
+
     <div class="interview-header">
       <div>
-        <span id="q-number-tag" class="badge badge-green font-mono">RUN 01 / 05</span>
+        <span id="q-number-tag" class="badge badge-green font-mono">Question 1 of 10</span>
         <span id="q-type-tag" class="badge badge-cyan font-mono" style="margin-left:0.4rem;">TECHNICAL</span>
       </div>
-      <span class="font-mono" style="font-size:0.8rem; color:var(--text-muted);">&gt; EXECUTION IN PROGRESS</span>
+      <div id="countdown-clock" class="countdown-clock font-mono">30:00</div>
     </div>
 
     <div class="question-card">
@@ -60,7 +57,7 @@
   </main>
 
   <footer>
-    <p>© 2026 Interview.exe — Run the interview. Debug your skills.</p>
+    <p>© 2026 HirePilot. All rights reserved.</p>
   </footer>
 
   <script src="js/api.js"></script>

@@ -1,4 +1,5 @@
 import json
+import time
 from typing import List, Dict, Any
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
@@ -9,6 +10,45 @@ from .question_generator import generate_questions
 from .evaluator import evaluate_answer
 
 router = APIRouter(prefix="/api/interviews", tags=["interviews"])
+
+class CreateInterviewReq(BaseModel):
+    role: str
+    experience: str
+    interview_type: str
+    difficulty: str
+    total_questions: int = 5
+
+DURATION_MATRIX_SECONDS = {
+    "Technical": {
+        "Easy": 120,      # 2m 0s
+        "Medium": 180,    # 3m 0s
+        "Hard": 240       # 4m 0s
+    },
+    "HR": {
+        "Easy": 90,       # 1m 30s
+        "Medium": 120,    # 2m 0s
+        "Hard": 180       # 3m 0s
+    },
+    "Behavioral": {
+        "Easy": 180,      # 3m 0s
+        "Medium": 240,    # 4m 0s
+        "Hard": 300       # 5m 0s
+    },
+    "Mixed": {
+        "Easy": 150,      # 2m 30s
+        "Medium": 180,    # 3m 0s
+        "Hard": 240       # 4m 0s
+    }
+}
+
+def get_duration_per_question(interview_type: str, difficulty: str) -> int:
+    t = (interview_type or "Technical").strip().title()
+    d = (difficulty or "Medium").strip().title()
+    if t not in DURATION_MATRIX_SECONDS:
+        t = "Technical"
+    if d not in DURATION_MATRIX_SECONDS[t]:
+        d = "Medium"
+    return DURATION_MATRIX_SECONDS[t][d]
 
 class CreateInterviewReq(BaseModel):
     role: str
@@ -35,6 +75,18 @@ def create_interview(req: CreateInterviewReq, current_user: dict = Depends(get_c
     )
     interview_id = cursor.lastrowid
 
+    # Fetch created_at timestamp in millisecond epoch
+    cursor.execute("SELECT started_at, UNIX_TIMESTAMP(started_at) AS start_ts FROM interviews WHERE id = %s", (interview_id,))
+    row = cursor.fetchone()
+    if row and row.get("start_ts"):
+        start_timestamp = int(row["start_ts"] * 1000)
+    else:
+        start_timestamp = int(time.time() * 1000)
+
+    # Calculate total duration in seconds
+    sec_per_q = get_duration_per_question(req.interview_type, req.difficulty)
+    duration_seconds = req.total_questions * sec_per_q
+
     # Generate Questions
     questions = generate_questions(
         role=req.role,
@@ -46,6 +98,7 @@ def create_interview(req: CreateInterviewReq, current_user: dict = Depends(get_c
 
     saved_questions = []
     for q in questions:
+        q_type = q.get("question_type", req.interview_type)
         cursor.execute(
             """INSERT INTO questions
             (interview_id, question_text, question_type, difficulty, question_order, ideal_answer, key_concepts)
@@ -53,7 +106,7 @@ def create_interview(req: CreateInterviewReq, current_user: dict = Depends(get_c
             (
                 interview_id,
                 q["question_text"],
-                q.get("question_type", req.interview_type),
+                q_type,
                 q.get("difficulty", req.difficulty),
                 q.get("question_order", 1),
                 q.get("ideal_answer", ""),
@@ -65,7 +118,7 @@ def create_interview(req: CreateInterviewReq, current_user: dict = Depends(get_c
             "id": q_id,
             "question_order": q["question_order"],
             "question_text": q["question_text"],
-            "question_type": q.get("question_type", req.interview_type),
+            "question_type": q_type,
             "difficulty": q.get("difficulty", req.difficulty),
             "ideal_answer": q.get("ideal_answer", ""),
             "key_concepts": q.get("key_concepts", "")
@@ -80,7 +133,50 @@ def create_interview(req: CreateInterviewReq, current_user: dict = Depends(get_c
         "interview_type": req.interview_type,
         "difficulty": req.difficulty,
         "total_questions": req.total_questions,
+        "duration_seconds": duration_seconds,
+        "start_timestamp": start_timestamp,
         "questions": saved_questions
+    }
+
+@router.get("/{interview_id}")
+def get_interview_session(interview_id: int, current_user: dict = Depends(get_current_user_from_token)):
+    user_id = int(current_user["sub"])
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT *, UNIX_TIMESTAMP(started_at) AS start_ts FROM interviews WHERE id = %s AND user_id = %s", (interview_id, user_id))
+    interview = cursor.fetchone()
+    if not interview:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Interview not found.")
+
+    cursor.execute(
+        """SELECT id, question_order, question_text, question_type, difficulty, ideal_answer, key_concepts 
+           FROM questions WHERE interview_id = %s ORDER BY question_order ASC""",
+        (interview_id,)
+    )
+    questions = cursor.fetchall()
+    conn.close()
+
+    sec_per_q = get_duration_per_question(interview.get("interview_type"), interview.get("difficulty"))
+    duration_seconds = (interview.get("total_questions") or 5) * sec_per_q
+    
+    if interview.get("start_ts"):
+        start_timestamp = int(interview["start_ts"] * 1000)
+    else:
+        start_timestamp = int(time.time() * 1000)
+
+    return {
+        "interview_id": interview["id"],
+        "role": interview["role"],
+        "experience": interview["experience"],
+        "interview_type": interview["interview_type"],
+        "difficulty": interview["difficulty"],
+        "total_questions": interview["total_questions"],
+        "duration_seconds": duration_seconds,
+        "start_timestamp": start_timestamp,
+        "status": interview["status"],
+        "questions": questions
     }
 
 @router.post("/{interview_id}/answer")
@@ -89,26 +185,27 @@ def submit_answer(interview_id: int, req: SubmitAnswerReq, current_user: dict = 
     cursor = conn.cursor()
     user_id = int(current_user["sub"])
 
-    cursor.execute("SELECT id, role, difficulty FROM interviews WHERE id = %s AND user_id = %s", (interview_id, user_id))
+    cursor.execute("SELECT id, role, difficulty, interview_type FROM interviews WHERE id = %s AND user_id = %s", (interview_id, user_id))
     interview = cursor.fetchone()
     if not interview:
         conn.close()
         raise HTTPException(status_code=404, detail="Interview not found.")
 
-    cursor.execute("SELECT id, question_text, ideal_answer, key_concepts FROM questions WHERE id = %s AND interview_id = %s", (req.question_id, interview_id))
+    cursor.execute("SELECT id, question_text, question_type, ideal_answer, key_concepts FROM questions WHERE id = %s AND interview_id = %s", (req.question_id, interview_id))
     question = cursor.fetchone()
     if not question:
         conn.close()
         raise HTTPException(status_code=404, detail="Question not found.")
 
-    # Evaluate Answer
+    # Evaluate Answer with category awareness
     eval_res = evaluate_answer(
         question_text=question["question_text"],
         user_answer=req.user_answer,
         ideal_answer=question["ideal_answer"] or "",
         key_concepts=question["key_concepts"] or "",
         role=interview["role"],
-        difficulty=interview["difficulty"]
+        difficulty=interview["difficulty"],
+        question_type=question.get("question_type") or interview.get("interview_type") or "Technical"
     )
 
     # Save/Update Answer
@@ -157,6 +254,25 @@ def complete_interview(interview_id: int, current_user: dict = Depends(get_curre
     if not interview:
         conn.close()
         raise HTTPException(status_code=404, detail="Interview not found.")
+
+    # Idempotency check: if already completed, return existing results
+    if interview.get("status") == "completed":
+        cursor.execute("SELECT * FROM interview_results WHERE interview_id = %s ORDER BY id DESC LIMIT 1", (interview_id,))
+        existing_res = cursor.fetchone()
+        conn.close()
+        if existing_res:
+            return {
+                "interview_id": interview_id,
+                "overall_score": existing_res["overall_score"],
+                "performance_category": existing_res["performance_category"],
+                "technical_score": existing_res["technical_score"],
+                "correctness_score": existing_res["correctness_score"],
+                "communication_score": existing_res["communication_score"],
+                "completeness_score": existing_res["completeness_score"],
+                "strengths": existing_res["strengths"],
+                "weak_areas": existing_res["weak_areas"],
+                "recommendations": existing_res["recommendations"]
+            }
 
     cursor.execute("""
         SELECT a.*, e.score, e.correctness_score, e.relevance_score, e.technical_score,

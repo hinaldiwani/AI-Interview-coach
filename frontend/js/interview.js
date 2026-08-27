@@ -6,17 +6,33 @@ let timerInterval = null;
 let speechRecognizer = null;
 let isListening = false;
 let isSubmitting = false;
+let interviewTerminated = false;
+let isInterviewCompleted = false;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const dataStr = sessionStorage.getItem("active_interview");
   if (!dataStr) {
     window.location.href = "interview-setup.html";
     return;
   }
   activeSession = JSON.parse(dataStr);
+
+  // Check remote interview status for refresh persistence
+  try {
+    const remoteSession = await ApiService.getInterview(activeSession.interview_id);
+    if (remoteSession && remoteSession.status === "terminated") {
+      interviewTerminated = true;
+      showTerminationModal();
+      return;
+    }
+  } catch (e) {
+    console.warn("Could not fetch remote session status:", e);
+  }
+
   initSpeech();
   initCountdownTimer();
   renderQuestion();
+  initTabSwitchDetection();
 });
 
 function initCountdownTimer() {
@@ -179,6 +195,7 @@ async function submitAnswer() {
 }
 
 async function finalizeInterview() {
+  isInterviewCompleted = true;
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -189,6 +206,94 @@ async function finalizeInterview() {
   } catch (err) {
     console.error("Finalization error:", err);
     window.location.href = `results.html?id=${activeSession.interview_id}`;
+  }
+}
+
+/* --- Strict Tab Switch Detection System --- */
+function initTabSwitchDetection() {
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      handleTabSwitchViolation();
+    } else if (document.visibilityState === "visible") {
+      if (interviewTerminated) {
+        showTerminationModal();
+      }
+    }
+  });
+
+  window.addEventListener("blur", () => {
+    handleTabSwitchViolation();
+  });
+
+  window.addEventListener("focus", () => {
+    if (interviewTerminated) {
+      showTerminationModal();
+    }
+  });
+}
+
+function handleTabSwitchViolation() {
+  if (interviewTerminated || isSubmitting || isInterviewCompleted) return;
+  interviewTerminated = true;
+
+  // 1. Immediately stop countdown timer
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  // 2. Disable UI controls
+  const inputEl = document.getElementById("answer-input");
+  if (inputEl) inputEl.disabled = true;
+  const btnSubmit = document.getElementById("btn-submit");
+  if (btnSubmit) btnSubmit.disabled = true;
+  const btnPrev = document.getElementById("btn-prev");
+  if (btnPrev) btnPrev.disabled = true;
+
+  // 3. Notify backend of termination
+  if (activeSession && activeSession.interview_id) {
+    notifyBackendTermination(activeSession.interview_id);
+  }
+
+  // 4. If currently visible/focused, display termination modal
+  if (document.visibilityState === "visible" || document.hasFocus()) {
+    showTerminationModal();
+  }
+}
+
+function notifyBackendTermination(interviewId) {
+  const url = `${API_BASE_URL}/api/interviews/${interviewId}/terminate`;
+  const token = ApiService.getAuthToken();
+
+  if (navigator.sendBeacon && token) {
+    const payload = JSON.stringify({ reason: "tab_switch" });
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: payload,
+      keepalive: true
+    }).catch(err => console.error("Termination fetch error:", err));
+  } else {
+    ApiService.terminateInterview(interviewId, "tab_switch")
+      .catch(err => console.error("Terminate interview API error:", err));
+  }
+}
+
+function showTerminationModal() {
+  const modal = document.getElementById("termination-modal");
+  if (modal) {
+    modal.style.display = "flex";
+  }
+}
+
+function viewTerminationResults() {
+  if (activeSession && activeSession.interview_id) {
+    window.location.href = `results.html?id=${activeSession.interview_id}`;
+  } else {
+    window.location.href = "dashboard.html";
   }
 }
 

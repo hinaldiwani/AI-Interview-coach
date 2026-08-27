@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS interviews (
     status VARCHAR(20) DEFAULT 'in_progress',
     started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     completed_at TIMESTAMP NULL DEFAULT NULL,
+    termination_reason VARCHAR(50) DEFAULT NULL,
     CONSTRAINT fk_interviews_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_interviews_user (user_id),
     INDEX idx_interviews_status (status)

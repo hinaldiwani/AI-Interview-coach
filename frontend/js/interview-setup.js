@@ -53,6 +53,19 @@ function restoreSavedConfig() {
 async function handleStartInterview(e) {
   e.preventDefault();
 
+  const agreeCb = document.getElementById("agree-rules");
+  const rulesNotice = document.getElementById("rules-notice");
+  if (agreeCb && !agreeCb.checked) {
+    if (rulesNotice) {
+      rulesNotice.textContent = "Please accept the interview rules before starting.";
+      rulesNotice.style.display = "block";
+      rulesNotice.scrollIntoView({ behavior: 'smooth' });
+    }
+    return;
+  } else if (rulesNotice) {
+    rulesNotice.style.display = "none";
+  }
+
   const role = document.getElementById("role").value;
   const expEl = document.querySelector("input[name='experience']:checked");
   const typeEl = document.querySelector("input[name='type']:checked");

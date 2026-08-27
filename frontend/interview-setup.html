@@ -119,6 +119,30 @@
           <span id="est-duration-tag" class="font-mono" style="font-size:1.05rem; font-weight:800; color:var(--primary);">30 minutes</span>
         </div>
 
+        <!-- Interview Rules Warning Box -->
+        <div style="background: rgba(139, 92, 246, 0.08); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: var(--radius-sm); padding: 1.15rem; margin-top: 1.25rem;">
+          <h3 style="font-size: 1rem; font-weight: 700; color: #C4B5FD; margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.4rem;">
+            ⚠️ Interview Rules
+          </h3>
+          <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.85rem;">
+            Before you begin, please note:
+            <ul style="margin: 0.4rem 0 0 1.1rem; padding: 0;">
+              <li>Stay on the HirePilot interview page throughout the interview.</li>
+              <li>Do not switch browser tabs or applications.</li>
+              <li>Do not use ChatGPT, Google, or other external resources during the interview.</li>
+              <li>Switching tabs or leaving the interview page will automatically end your interview.</li>
+            </ul>
+          </div>
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--text-main); user-select: none;">
+            <input type="checkbox" id="agree-rules" style="width: 1rem; height: 1rem; accent-color: var(--primary); cursor: pointer;">
+            I understand and agree to the interview rules.
+          </label>
+        </div>
+
+        <div id="rules-notice" class="error-message" style="display:none; margin-top: 0.75rem;">
+          Please accept the interview rules before starting.
+        </div>
+
         <button type="submit" id="btn-start" class="btn btn-primary btn-lg" style="width:100%; margin-top:1.25rem;">
           ▶ Run Interview
         </button>

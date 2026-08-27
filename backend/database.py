@@ -49,6 +49,12 @@ def init_db():
                         cursor.execute(stmt)
                     except Exception:
                         pass
+                
+                # Ensure termination_reason column exists
+                try:
+                    cursor.execute("ALTER TABLE interviews ADD COLUMN termination_reason VARCHAR(50) DEFAULT NULL")
+                except Exception:
+                    pass
         conn.close()
 
         print("MySQL Connected Successfully")

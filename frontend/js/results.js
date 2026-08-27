@@ -15,14 +15,18 @@ async function loadResults(id) {
     const interview = data.interview || {};
     const reviews = data.reviews || [];
 
-    const score = Math.round(result.overall_score || interview.overall_score || 0);
+    const isTerminated = (interview.status === "terminated" || result.performance_category === "TERMINATED");
+    const score = isTerminated ? 0 : Math.round(result.overall_score || interview.overall_score || 0);
     document.getElementById("overall-score-num").textContent = score;
     document.getElementById("overall-circle").style.setProperty("--score-pct", score);
 
     const catTag = document.getElementById("category-tag");
     let category = result.performance_category || "COMPLETED";
     
-    if (score >= 85) {
+    if (isTerminated) {
+      category = "TERMINATED — TAB SWITCH DETECTED";
+      catTag.style.color = "var(--danger)";
+    } else if (score >= 85) {
       category = "EXCELLENT BUILD";
       catTag.style.color = "var(--success)";
     } else if (score >= 70) {

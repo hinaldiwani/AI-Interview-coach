@@ -176,6 +176,7 @@ def get_interview_session(interview_id: int, current_user: dict = Depends(get_cu
         "duration_seconds": duration_seconds,
         "start_timestamp": start_timestamp,
         "status": interview["status"],
+        "termination_reason": interview.get("termination_reason"),
         "questions": questions
     }
 
@@ -333,6 +334,62 @@ def complete_interview(interview_id: int, current_user: dict = Depends(get_curre
         "recommendations": recs_text
     }
 
+class TerminateInterviewReq(BaseModel):
+    reason: str = "tab_switch"
+
+@router.post("/{interview_id}/terminate")
+def terminate_interview(interview_id: int, req: TerminateInterviewReq, current_user: dict = Depends(get_current_user_from_token)):
+    user_id = int(current_user["sub"])
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM interviews WHERE id = %s AND user_id = %s", (interview_id, user_id))
+    interview = cursor.fetchone()
+    if not interview:
+        conn.close()
+        raise HTTPException(status_code=404, detail="Interview not found.")
+
+    # Idempotent check
+    if interview.get("status") in ["terminated", "completed"]:
+        reason = interview.get("termination_reason") or ("tab_switch" if interview.get("status") == "terminated" else None)
+        conn.close()
+        return {
+            "interview_id": interview_id,
+            "status": interview["status"],
+            "termination_reason": reason,
+            "message": f"Interview is already {interview['status']}."
+        }
+
+    reason = req.reason or "tab_switch"
+
+    try:
+        cursor.execute(
+            "UPDATE interviews SET status = 'terminated', termination_reason = %s, completed_at = CURRENT_TIMESTAMP WHERE id = %s",
+            (reason, interview_id)
+        )
+    except Exception:
+        cursor.execute(
+            "UPDATE interviews SET status = 'terminated', completed_at = CURRENT_TIMESTAMP WHERE id = %s",
+            (interview_id,)
+        )
+
+    # Save to interview_results
+    cursor.execute("SELECT id FROM interview_results WHERE interview_id = %s", (interview_id,))
+    if not cursor.fetchone():
+        cursor.execute("""
+            INSERT INTO interview_results
+            (interview_id, technical_score, correctness_score, communication_score, completeness_score, overall_score, performance_category, strengths, weak_areas, recommendations)
+            VALUES (%s, 0.0, 0.0, 0.0, 0.0, 0.0, 'TERMINATED', 'None - Interview terminated early due to tab switching.', 'Tab switching detected during active interview.', 'Stay on the interview tab throughout the interview duration.')
+        """, (interview_id,))
+
+    conn.close()
+    return {
+        "interview_id": interview_id,
+        "status": "terminated",
+        "termination_reason": reason,
+        "message": "Interview terminated successfully."
+    }
+
 @router.get("/{interview_id}/results")
 def get_interview_results(interview_id: int, current_user: dict = Depends(get_current_user_from_token)):
     user_id = int(current_user["sub"])
@@ -360,3 +417,4 @@ def get_interview_results(interview_id: int, current_user: dict = Depends(get_cu
 
     conn.close()
     return {"interview": interview, "result": result, "reviews": reviews}
+

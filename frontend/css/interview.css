@@ -303,3 +303,56 @@ footer {
   background: var(--bg-secondary);
   margin-top: auto;
 }
+
+/* --- Tab Switch Termination Modal Overlay --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 10, 20, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal-card {
+  background: var(--card-bg, #161622);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: var(--radius-md, 12px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  max-width: 480px;
+  width: 100%;
+  padding: 2.25rem;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main, #FFFFFF);
+  margin-bottom: 0.85rem;
+}
+
+.modal-message {
+  font-size: 0.925rem;
+  color: var(--text-secondary, #94A3B8);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}

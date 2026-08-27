@@ -117,6 +117,13 @@ class ApiService {
     });
   }
 
+  static async terminateInterview(interviewId, reason = "tab_switch") {
+    return this.request(`/api/interviews/${interviewId}/terminate`, {
+      method: "POST",
+      body: JSON.stringify({ reason })
+    });
+  }
+
   static async getInterviewResults(interviewId) {
     return this.request(`/api/interviews/${interviewId}/results`);
   }

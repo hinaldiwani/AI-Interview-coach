@@ -28,12 +28,16 @@ async function loadHistory() {
 
     tbody.innerHTML = data.history.map(i => {
       const dt = new Date(i.started_at).toLocaleString();
-      const scoreNum = Math.round(i.overall_score);
+      const isTerminated = i.status === "terminated";
+      const scoreNum = isTerminated ? 0 : Math.round(i.overall_score || 0);
 
       let scoreColor = "var(--primary)";
       let categoryClass = "badge-green";
 
-      if (scoreNum >= 85) {
+      if (isTerminated) {
+        scoreColor = "var(--danger)";
+        categoryClass = "badge-danger";
+      } else if (scoreNum >= 85) {
         scoreColor = "var(--success)";
         categoryClass = "badge-success";
       } else if (scoreNum >= 70) {
@@ -47,6 +51,8 @@ async function loadHistory() {
         categoryClass = "badge-danger";
       }
 
+      const displayCategory = isTerminated ? "TERMINATED" : (i.performance_category || i.status || "COMPLETED");
+
       return `
         <tr>
           <td class="font-mono">#${i.id}</td>
@@ -54,8 +60,8 @@ async function loadHistory() {
           <td><strong>${i.role}</strong></td>
           <td>${i.interview_type}</td>
           <td><span class="badge badge-green">${i.difficulty}</span></td>
-          <td><strong class="font-mono" style="color:${scoreColor};">${scoreNum}%</strong></td>
-          <td><span class="badge ${categoryClass}">${i.performance_category || i.status}</span></td>
+          <td><strong class="font-mono" style="color:${scoreColor};">${isTerminated ? '0%' : scoreNum + '%'}</strong></td>
+          <td><span class="badge ${categoryClass}">${displayCategory}</span></td>
           <td>
             <a href="results.html?id=${i.id}" class="btn btn-secondary" style="padding:0.3rem 0.75rem; font-size:0.8rem;">View Output</a>
           </td>

@@ -13,7 +13,7 @@ from .dashboard import router as dashboard_router
 from .history import router as history_router
 
 app = FastAPI(
-    title="AI Interview Coach Backend API",
+    title="HirePilot Backend API",
     description="Full-stack AI Interview Preparation & Evaluation Platform API",
     version="2.0.0"
 )

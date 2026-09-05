@@ -20,8 +20,8 @@ def get_raw_mysql_connection(select_db=True):
 
 def init_db():
     """Initializes and tests MySQL connection on backend startup."""
-    print("\nAI Interview Coach Backend")
-    print("--------------------------")
+    print("\nHirePilot Backend")
+    print("-----------------")
     print("Connecting to MySQL...")
     print(f"Database: {DB_NAME}")
 

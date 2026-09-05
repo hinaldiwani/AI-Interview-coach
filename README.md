@@ -1,4 +1,4 @@
-# AI Interview Coach – AI-Powered Interview Preparation & Evaluation System
+# HirePilot – AI-Powered Interview Preparation & Evaluation System
 
 A complete full-stack web application built to conduct realistic job interviews, evaluate user responses using AI / local rule engines, and store candidates' performance history in a **MySQL** database.
 
@@ -7,7 +7,7 @@ A complete full-stack web application built to conduct realistic job interviews,
 ## 📁 Complete Project Structure
 
 ```text
-AI-Interview-Coach/
+HirePilot/
 │
 ├── frontend/
 │   ├── index.html              # Landing Page
@@ -37,6 +37,9 @@ AI-Interview-Coach/
 │   ├── database_setup.sql      # Complete Executable Setup Script
 │   ├── schema.sql              # DDL Table Definitions
 │   └── seed.sql                # Seed Question Bank
+│
+├── documentation/
+│   └── HirePilot_Project_Report.pdf # Comprehensive Project Report PDF
 │
 ├── .env.example                # Environment Template
 ├── .gitignore                  # Git Exclusion Rules
@@ -137,8 +140,8 @@ python run.py
 On server start, the terminal will clearly display:
 
 ```text
-AI Interview Coach Backend
---------------------------
+HirePilot Backend
+-----------------
 Connecting to MySQL...
 Database: ai_interview_coach
 MySQL Connected Successfully

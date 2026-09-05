@@ -1,5 +1,5 @@
 -- =========================================================================
--- AI INTERVIEW COACH - MYSQL DATABASE SCHEMA DEFINITIONS
+-- HIREPILOT - MYSQL DATABASE SCHEMA DEFINITIONS
 -- =========================================================================
 
 CREATE DATABASE IF NOT EXISTS ai_interview_coach CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

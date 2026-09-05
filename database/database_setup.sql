@@ -1,5 +1,5 @@
 -- =========================================================================
--- AI INTERVIEW COACH - COMPLETE MYSQL DATABASE SETUP SCRIPT
+-- HIREPILOT - COMPLETE MYSQL DATABASE SETUP SCRIPT
 -- Directly executable from MySQL Command Line Client, MySQL Workbench, or phpMyAdmin
 -- Usage in MySQL CLI: SOURCE C:/FULL/PATH/TO/database/database_setup.sql;
 -- =========================================================================
